@@ -394,5 +394,44 @@
       "Live Band"
     ],
     "decorations": "Flowers"
+  },
+  {
+    "eventPurpose": "Birthday",
+    "guests": "20",
+    "date": "2025-05-16",
+    "budget": "500000",
+    "theme": "Formal",
+    "venue": "Hotel",
+    "foodBeverage": "Buffet",
+    "entertainment": [
+      "Live Band"
+    ],
+    "decorations": "Balloons"
+  },
+  {
+    "eventPurpose": "Birthday",
+    "guests": "20",
+    "date": "2025-05-16",
+    "budget": "500000",
+    "theme": "Formal",
+    "venue": "Hotel",
+    "foodBeverage": "Buffet",
+    "entertainment": [
+      "Live Band"
+    ],
+    "decorations": "Balloons"
+  },
+  {
+    "eventPurpose": "Birthday",
+    "guests": "40",
+    "date": "2025-05-21",
+    "budget": "10",
+    "theme": "Casual",
+    "venue": "Indoor",
+    "foodBeverage": "Sit-Down",
+    "entertainment": [
+      "Live Band"
+    ],
+    "decorations": "Lighting"
   }
 ]
