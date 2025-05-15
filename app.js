@@ -168,7 +168,7 @@ app.get('/corporate1', (req, res) => res.render('corporate1'));
 app.get('/services', (req, res) => res.render('services'));
 
 // MongoDB Connection and Server Start
-mongoose.connect('mongodb+srv://mahiawasthi2994:adminmongodb@cluster0.vqmlily.mongodb.net/Cosmic')
+mongoose.connect('mongodb+srv://mahiawasthi2994:YOURPW@cluster0.vqmlily.mongodb.net/Cosmic')
 .then(() => {
     console.log('✅ Connected to MongoDB');
     app.listen(3000, () => {
