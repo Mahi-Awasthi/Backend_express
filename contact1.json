@@ -63,5 +63,27 @@
     "guest": "123",
     "dest": "wedfwsd",
     "text": "df"
+  },
+  {
+    "fname": "Mahi",
+    "lname": "Awasthi",
+    "fname1": "Mehak",
+    "lname1": "Mehat",
+    "email": "xyz@gmail.com",
+    "phone": "9876543210",
+    "add": [
+      "#30",
+      "Rajpura",
+      "Near MLA"
+    ],
+    "city": "Rajpura",
+    "state": "PB",
+    "code": "140401",
+    "c": "India",
+    "w": "2025-05-31",
+    "cat": "NA",
+    "guest": "40",
+    "dest": "CU",
+    "text": "NA"
   }
 ]

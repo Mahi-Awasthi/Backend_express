@@ -21,7 +21,7 @@ const requestLogger = (req, res, next) => {
     next();
 };
 
-// 🛡 Middleware to Validate Event Form Data Before Submitting
+// 🛡 Middleware to Validate Event Form Data
 const validateFormData = (req, res, next) => {
     const { eventPurpose, guests, date, budget } = req.body;
     if (!eventPurpose || !guests || !date || !budget) {
@@ -42,13 +42,11 @@ const validateDashboardFormData = (req, res, next) => {
 // Apply Logging Middleware Globally
 app.use(requestLogger);
 
-// File paths for non-MongoDB storage
-const contactFilePath = path.join(__dirname, 'contact1.json');
+// File paths for fallback local storage (not used for /contactone anymore)
 const eventFilePath = path.join(__dirname, 'data.json');
 const dashboardFilePath = path.join(__dirname, 'dashboard.json');
 
 // Ensure required JSON files exist
-if (!fs.existsSync(contactFilePath)) fs.writeFileSync(contactFilePath, '[]');
 if (!fs.existsSync(eventFilePath)) fs.writeFileSync(eventFilePath, '[]');
 if (!fs.existsSync(dashboardFilePath)) fs.writeFileSync(dashboardFilePath, '[]');
 
@@ -57,38 +55,31 @@ app.get('/', (req, res) => {
     res.render('index');
 });
 
-// Save Contact Form Data
-app.post('/contactone', (req, res) => {
-    const newUser = req.body;
+// MONGOOSE SCHEMAS AND MODELS
 
-    fs.readFile(contactFilePath, 'utf8', (err, data) => {
-        let users = [];
-
-        if (err && err.code !== 'ENOENT') {
-            console.error('Error reading file:', err);
-            return res.status(500).send('Server Error');
-        }
-
-        try {
-            users = data ? JSON.parse(data) : [];
-        } catch (parseError) {
-            console.error('JSON Parse Error:', parseError);
-            return res.status(500).send('Server Error');
-        }
-
-        users.push(newUser);
-
-        fs.writeFile(contactFilePath, JSON.stringify(users, null, 2), (err) => {
-            if (err) {
-                console.error('Error writing file:', err);
-                return res.status(500).send('Server Error');
-            }
-            res.send('Contact Data Saved Successfully!');
-        });
-    });
+const contactSchema = new mongoose.Schema({
+    fname: String,
+    lname: String,
+    fname1: String,
+    lname1: String,
+    email: String,
+    phone: String,
+    add: String,
+    add1: String,
+    add2: String,
+    city: String,
+    state: String,
+    code: Number,
+    c: String,
+    w: Date,
+    cat: String,
+    guest: Number,
+    dest: String,
+    text: String,
 });
 
-// Mongoose Event Schema
+const Contact = mongoose.model('Contact', contactSchema);
+
 const eventSchema = new mongoose.Schema({
     eventPurpose: { type: String, required: true },
     guests: { type: String, required: true },
@@ -100,9 +91,23 @@ const eventSchema = new mongoose.Schema({
     entertainment: [String],
     decorations: String
 });
+
 const Event = mongoose.model('Event', eventSchema);
 
-// Save Event Form Data to MongoDB
+// SAVE CONTACT DATA TO MONGODB (POST)
+app.post('/contactone', async (req, res) => {
+    try {
+        const newContact = new Contact(req.body);
+        await newContact.save();
+        console.log('New Contact Saved to MongoDB:', newContact);
+        res.send('Contact Data Saved to MongoDB Successfully!');
+    } catch (err) {
+        console.error('MongoDB Contact Save Error:', err);
+        res.status(500).send('Server Error');
+    }
+});
+
+// EVENT FORM SAVE TO DB
 app.post('/formdata', validateFormData, async (req, res) => {
     try {
         const newEvent = new Event(req.body);
@@ -115,7 +120,7 @@ app.post('/formdata', validateFormData, async (req, res) => {
     }
 });
 
-// Save Dashboard Form Data (still using local file)
+// DASHBOARD SAVE TO FILE
 app.post('/dashboard-submit', validateDashboardFormData, (req, res) => {
     const newDashboardEntry = req.body;
 
@@ -138,13 +143,13 @@ app.post('/dashboard-submit', validateDashboardFormData, (req, res) => {
     });
 });
 
-// Fetch Events with Query Parameters
+// GET EVENTS WITH FILTERS
 app.get('/events', async (req, res) => {
     try {
         const query = {};
         for (let key in req.query) {
             if (req.query[key]) {
-                query[key] = new RegExp(req.query[key], 'i'); // case-insensitive search
+                query[key] = new RegExp(req.query[key], 'i'); // case-insensitive
             }
         }
         const events = await Event.find(query);
@@ -155,7 +160,7 @@ app.get('/events', async (req, res) => {
     }
 });
 
-// Additional Routes
+// PAGE ROUTES (GET)
 app.get('/contact', (req, res) => res.render('contact'));
 app.get('/about', (req, res) => res.render('About'));
 app.get('/portfolio', (req, res) => res.render('portfolio'));
@@ -167,14 +172,14 @@ app.get('/mitzvhans', (req, res) => res.render('mitzvhans'));
 app.get('/corporate1', (req, res) => res.render('corporate1'));
 app.get('/services', (req, res) => res.render('services'));
 
-// MongoDB Connection and Server Start
-mongoose.connect('mongodb+srv://mahiawasthi2994:YOURPW@cluster0.vqmlily.mongodb.net/Cosmic')
+// MONGODB CONNECTION + SERVER
+mongoose.connect('mongodb+srv://mahiawasthi2994:adminmongodb@cluster0.vqmlily.mongodb.net/Cosmic')
 .then(() => {
-    console.log('✅ Connected to MongoDB');
+    console.log('Connected to MongoDB');
     app.listen(3000, () => {
         console.log('🚀 Server running on http://localhost:3000');
     });
 })
 .catch((err) => {
-    console.error('❌ MongoDB connection error:', err);
+    console.error('MongoDB connection error:', err);
 });
