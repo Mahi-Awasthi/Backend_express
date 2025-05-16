@@ -1,13 +1,9 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
-const cors = require("cors");
 const mongoose = require("mongoose");
 
 const app = express();
-
-// Enable CORS for all routes
-app.use(cors());
 
 // Middleware
 app.set('view engine', 'ejs');
